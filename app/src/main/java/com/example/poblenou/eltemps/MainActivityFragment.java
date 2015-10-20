@@ -29,13 +29,17 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View fragmento = inflater.inflate(R.layout.fragment_main, container, false);
+        View fragmento = inflater.inflate(R.layout.fragment_main, container, false);    //Fragment
 
-        items = new ArrayList<>();
-        misDias = (TextView) fragmento.findViewById(R.id.misDias);
-        miListaTiempo = (ListView) fragmento.findViewById(R.id.listaTiempo);
-        myAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,items);
-        miListaTiempo.setAdapter(myAdapter);
+        items = new ArrayList<>();     //array list que contindrà els dies
+
+        misDias = (TextView) fragmento.findViewById(R.id.misDias);  //Asignem el ID
+        miListaTiempo = (ListView) fragmento.findViewById(R.id.listaTiempo);    //Asignme el id
+
+        myAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,items);  // Definim adaptador al layaout predefinit i al nostre array items
+        miListaTiempo.setAdapter(myAdapter);    //Acoplem el adaptador
+
+        //Si apretem un temps l'opció del ListView, la opció desapareixerà
         miListaTiempo.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -45,6 +49,7 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
+        //afegim diverses entrades al ListView
         myAdapter.add("Lunes 19/10/2015 - Nublado");
         myAdapter.add("Martes 20/10/2015 - Nublado");
         myAdapter.add("Miercoles 21/10/2015 - Nublado");
