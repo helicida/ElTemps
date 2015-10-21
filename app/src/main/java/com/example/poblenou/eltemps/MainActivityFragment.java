@@ -20,25 +20,25 @@ import java.util.ArrayList;
  */
 public class MainActivityFragment extends Fragment {
 
-    ArrayAdapter<String> myAdapter;
-    private ArrayList<String> items;
-    private ListView miListaTiempo;
-    private TextView misDias;
-
-    MenuItem refresh;
+    ArrayAdapter<String> myAdapter; //Adaptador per al listView
+    private ArrayList<String> items;    ///ArrayList amb els items **provisional
+    private ListView miListaTiempo; //ListView on mostrarem els items
+    private TextView misDias;       //TestView donde mostraremos los dias
 
     public MainActivityFragment() {
 
     }
 
+    //OpenWeather URL http://api.openweathermap.org/data/2.5/forecast/city?id=3120619&APPID=08d35d57782699eba8799fd29a029932
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);        //Aixo fa que mostri el menu. Com n'hi han fragments no grafics cal especificar-ho
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { //Afegim una opcio "Refresh" al menu del fragment
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_fragment, menu);
