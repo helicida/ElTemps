@@ -12,8 +12,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import com.example.poblenou.eltemps.json.Forecast;
 import java.util.ArrayList;
+
+import javax.xml.transform.Result;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+import retrofit.http.GET;
+import retrofit.http.Query;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -24,6 +34,10 @@ public class MainActivityFragment extends Fragment {
     private ArrayList<String> items;    ///ArrayList amb els items **provisional
     private ListView miListaTiempo; //ListView on mostrarem els items
     private TextView misDias;       //TestView donde mostraremos los dias
+    private final String city = "Barcelona";
+    private String BaseURL = "http://api.openweathermap.org/data/2.5/";
+    private String apiID = "3120619&APPID=08d35d57782699eba8799fd29a029932";
+    private OpenWeatherMapService service;
 
     public MainActivityFragment() {
 
@@ -42,6 +56,56 @@ public class MainActivityFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_refresh) {
+            refresh();  //Fem que al presionar el Refresh cridi al metode refresh
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void refresh(){
+        /*
+
+        Retrofit retrofit = new Retrofit.Builder()  //Retrofit
+                .baseUrl(BaseURL)   //Primera parte de la url
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        service = retrofit.create(OpenWeatherMapService.class);    //
+
+        Call<Forecast> llamada = service.dailyForecast(city, "json", "metric", 14, apiID);
+        llamada.enqueue(new Callback<ListResult>() {
+            @Override
+            public void onResponse(Response<ListResult> response, Retrofit retrofit) {
+                ArrayList<String> arrayTiempo = new ArrayList<String>(); // Fem un array on em
+                ListResult resultado = response.body();
+                for (Result list : resultado.getResults()) {
+                    int id = list.getId();  // Demanem el ID de la pelicula
+                    String titulo = list.getTitle();    // Demanem el titol de la pelicula
+                    arrayPeliculas.add(String.valueOf(id) + " | " + titulo);    //Afegim al array el la id i el titol
+                }
+                myAdapter.clear();
+                myAdapter.addAll(arrayPeliculas);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+        */
+
     }
 
     @Override
@@ -77,5 +141,15 @@ public class MainActivityFragment extends Fragment {
         myAdapter.add("Domingo 25/10/2015 - Nublado");
 
         return fragmento;
+    }
+
+    public interface OpenWeatherMapService{
+        @GET("forecast/daily")
+        Call<Forecast> dailyForecast(
+                @Query("q") String city,
+                @Query("mode") String format,
+                @Query("units") String units,
+                @Query("cnt") Integer num,
+                @Query("appid") String appid);
     }
 }

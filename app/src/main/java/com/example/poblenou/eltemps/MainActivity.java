@@ -1,5 +1,6 @@
 package com.example.poblenou.eltemps;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.poblenou.eltemps.provider.SettingsActivity;
 
 import java.util.ArrayList;
 
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, SettingsActivity.class);    //intent para ir a la activity I
+            startActivity(i);   //hacemos el intent
             return true;
         }
 
