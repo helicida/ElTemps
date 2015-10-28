@@ -1,7 +1,11 @@
 package com.example.poblenou.eltemps;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,16 +17,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.example.poblenou.eltemps.json.Forecast;
+import com.example.poblenou.eltemps.json.List;
+
 import java.util.ArrayList;
-
-import javax.xml.transform.Result;
-
 import retrofit.Call;
 import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+
 import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.http.GET;
 import retrofit.http.Query;
+
 
 
 /**
@@ -36,7 +42,7 @@ public class MainActivityFragment extends Fragment {
     private TextView misDias;       //TestView donde mostraremos los dias
     private final String city = "Barcelona";
     private String BaseURL = "http://api.openweathermap.org/data/2.5/";
-    private String apiID = "3120619&APPID=08d35d57782699eba8799fd29a029932";
+    private String apiID = "08d35d57782699eba8799fd29a029932";
     private OpenWeatherMapService service;
 
     public MainActivityFragment() {
@@ -67,15 +73,17 @@ public class MainActivityFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            refresh();  //Fem que al presionar el Refresh cridi al metode refresh
+            refresh(getContext());  //Fem que al presionar el Refresh cridi al metode refresh
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh(){
-        /*
+    public void refresh(Context context){
+
+        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(context);
+        String city = preferencias.getString("City", "Barcelona");
 
         Retrofit retrofit = new Retrofit.Builder()  //Retrofit
                 .baseUrl(BaseURL)   //Primera parte de la url
@@ -83,19 +91,19 @@ public class MainActivityFragment extends Fragment {
                 .build();
         service = retrofit.create(OpenWeatherMapService.class);    //
 
-        Call<Forecast> llamada = service.dailyForecast(city, "json", "metric", 14, apiID);
-        llamada.enqueue(new Callback<ListResult>() {
+        Call<Forecast> llamada = service.dailyForecast("Barcelona", "json", "metric", 14, apiID);
+            llamada.enqueue(new Callback<Forecast>() {
             @Override
-            public void onResponse(Response<ListResult> response, Retrofit retrofit) {
-                ArrayList<String> arrayTiempo = new ArrayList<String>(); // Fem un array on em
-                ListResult resultado = response.body();
-                for (Result list : resultado.getResults()) {
-                    int id = list.getId();  // Demanem el ID de la pelicula
-                    String titulo = list.getTitle();    // Demanem el titol de la pelicula
-                    arrayPeliculas.add(String.valueOf(id) + " | " + titulo);    //Afegim al array el la id i el titol
+            public void onResponse(Response<Forecast> response, Retrofit retrofit) {
+                Forecast forecast = response.body();
+
+                ArrayList<String> arrayTemps = new ArrayList<>();
+                    for (List list : forecast.getList()){
+                     String tempsString = list.getWeather().get(0).getDescription();
+                     arrayTemps.add(tempsString);
                 }
                 myAdapter.clear();
-                myAdapter.addAll(arrayPeliculas);
+                myAdapter.addAll(arrayTemps);
             }
 
             @Override
@@ -103,9 +111,6 @@ public class MainActivityFragment extends Fragment {
 
             }
         });
-
-        */
-
     }
 
     @Override
